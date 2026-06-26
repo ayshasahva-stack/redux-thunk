@@ -13,6 +13,7 @@ const Tasks = () => {
   useEffect(()=>{
     dispatch(getTaskFromServer())
 
+
   },[])
 
   return (
@@ -21,7 +22,7 @@ const Tasks = () => {
 
       <div>
         {taskLists.map((item)=>(
-          <div >
+          <div key={item.id}>
             <p>{item.id}</p>
             <p>{item.title}</p>
             <p>{item.description}</p>
