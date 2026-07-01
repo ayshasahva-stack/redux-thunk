@@ -44,6 +44,20 @@ export const addTaskServer = createAsyncThunk(
 
 )
 
+export const deleteTaskFromServer = createAsyncThunk(
+    " task/deleteTaskFromServer",
+    async (id, { rejectWithValue }) => {
+        const response = await fetch(`http://localhost:3001/tasks/${id}`, {
+            method: "DELETE",
+        })
+
+        if (!response.ok) {
+            return rejectWithValue('failed delete task')
+        }
+        return id
+    }
+)
+
 
 const taskListSlice = createSlice({
     name: 'tasks',
@@ -85,6 +99,21 @@ const taskListSlice = createSlice({
                 state.is_loading = false
                 state.error = action.payload
 
+            })
+
+            // delete
+
+            .addCase(deleteTaskFromServer.pending, (state) => {
+                state.is_loading = true
+                state.error = ""
+            })
+            .addCase(deleteTaskFromServer.fulfilled, (state, action) => {
+                state.is_loading = false
+                state.taskLists = state.taskLists.filter((item) => item.id !== action.payload)
+            })
+            .addCase(deleteTaskFromServer.rejected, (state, action) => {
+                state.is_loading = false
+                state.error = action.payload
             })
 
     }
